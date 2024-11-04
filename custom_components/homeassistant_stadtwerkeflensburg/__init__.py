@@ -15,7 +15,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    st_fl = await StadtwerkeFlensburg(
+    stadtwerkeflensburg = await StadtwerkeFlensburg(
         email=entry.data[CONF_EMAIL],
         password=entry.data[CONF_PASSWORD]
     )
@@ -23,12 +23,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # coordinator = hass.DataUpdateCoordinator(hass, _LOGGER, name=DOMAIN, update_interval=DEFAULT_UPDATE_INTERVAL)
 
     _LOGGER.debug("__init__.py: async_setup_entry")
-    # await st_fl.async_start()
-    # if not await st_fl.async_login():
+    # await stadtwerkeflensburg.async_start()
+    # if not await stadtwerkeflensburg.async_login():
     #     _LOGGER.debug("__init__.py: async_setup_entry, return False")
     #     return False
 
-    await st_fl.async_login()
+    await stadtwerkeflensburg.async_login()
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     _LOGGER.debug("__init__.py: async_setup_entry, after await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)")
