@@ -3,12 +3,12 @@
   "name": "Stadtwerke Flensburg",
   "codeowners": ["@MrFinchMkV"],
   "config_flow": true,
-  "single_config_entry": true,
+  "single_config_entry": false,
   "dependencies": [],
   "documentation": "https://github.com/MrFinchMkV/home-assistant_stadtwerke-flensburg",
   "integration_type": "service",
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/MrFinchMkV/home-assistant_stadtwerke-flensburg/issues",
-  "requirements": [],
+  "requirements": ["pytest-playwright"],
   "version": "0.0.1"
 }

@@ -1,43 +1,67 @@
+from .stadtwerkeflensburg import StadtwerkeFlensburg
+from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
+
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.update_coordinator import (
-    CoordinatorEntity,
-    DataUpdateCoordinator,
+# from homeassistant.helpers.update_coordinator import (
+#     CoordinatorEntity,
+#     DataUpdateCoordinator,
+# )
+from homeassistant.components.sensor import (
+    # SensorDeviceClass,
+    SensorEntity,
+    # SensorStateClass,
 )
 
 async def async_setup_entry(
     hass: HomeAssistant, entry: ConfigEntry, async_add_entities
 ) -> None:
-    unique_id = entry.data[CONF_ID]
+
+    st_fl = StadtwerkeFlensburg(
+        email=entry.data[CONF_USERNAME],
+        password=entry.data[CONF_PASSWORD]
+    )
+
+    await st_fl.async_start()
+    await st_fl.async_login()
+
+    st_fl_sensor = StadtwerkeFlensburgSensor(st_fl)
 
     entities = []
-    entities.append(StadtwerkeFlensburgSensor())
-    async_add_entities(entities)
+    entities.append(st_fl_sensor)
+    async_add_entities(entities, True)
 
-class StadtwerkeFlensburgSensor(CoordinatorEntity, SensorEntity):
-    def __init__(
-        self,
-        coordinator,
-        unique_id,
-        sensor_type,
-        name,
-        unit,
-        icon,
-        device_class,
-        state_class,
-        enabled_default: bool = True,
-    ):
-        super().__init__(coordinator)
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 
-        self._unique_id = unique_id
-        self._type = sensor_type
-        self._device_class = device_class
-        self._state_class = state_class
-        self._enabled_default = enabled_default
+def setup_platform(
+    hass: HomeAssistant,
+    config: ConfigType,
+    add_entities: AddEntitiesCallback,
+    discovery_info: DiscoveryInfoType | None = None
+) -> None:
+    """Set up the sensor platform."""
+    add_entities([StadtwerkeFlensburgSensor()])
 
-        self._attr_name = name
-        self._attr_device_class = self._device_class
-        self._attr_icon = icon
-        self._attr_native_unit_of_measurement = unit
-        self._attr_unique_id = f"{self._unique_id}_{self._type}"
-        self._attr_state_class = state_class
+
+# class StadtwerkeFlensburgSensor(CoordinatorEntity, SensorEntity):
+class StadtwerkeFlensburgSensor(SensorEntity):
+     """Representation of a Sensor."""
+
+    _attr_name = "Reading"
+    # _attr_native_unit_of_measurement = UnitOfEnergy.kWh
+    _attr_device_class = SensorDeviceClass.ENERGY
+    _attr_state_class = SensorStateClass.TOTAL_INCREASING
+    _suggested_display_precision = 1
+    _attr_native_value = ""
+
+    def __init__(self, st_fl: StadtwerkeFlensburg):
+        self.st_fl = st_fl
+        self._attr_native_value = ""
+
+    async def async_update(self) -> None:
+        """Fetch new state data for the sensor.
+
+        This is the only method that should fetch new data for Home Assistant.
+        """
+        self._attr_native_value = await self.st_fl.async_get_last_meter_reading

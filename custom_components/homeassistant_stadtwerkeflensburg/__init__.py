@@ -1,5 +1,4 @@
 import logging
-from datetime import timedelta
 
 from .stadtwerkeflensburg import StadtwerkeFlensburg
 
@@ -13,9 +12,6 @@ from homeassistant.core import HomeAssistant
 from .const import DOMAIN, DEFAULT_UPDATE_INTERVAL, PLATFORMS
 
 _LOGGER = logging.getLogger(__name__)
-# DEFAULT_UPDATE_INTERVAL = timedelta(minutes=5)
-# DOMAIN = "stadtwerke_flensburg"
-# PLATFORMS = ["sensor"]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -26,6 +22,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     # coordinator = hass.DataUpdateCoordinator(hass, _LOGGER, name=DOMAIN, update_interval=DEFAULT_UPDATE_INTERVAL)
 
+    await st_fl.async_start()
     if not await st_fl.async_login():
         return False
 
