@@ -1,5 +1,5 @@
 import logging
-from .stadtwerkeflensburg import StadtwerkeFlensburg
+from stadtwerkeflensburg import StadtwerkeFlensburg
 from homeassistant.const import CONF_EMAIL, CONF_PASSWORD, UnitOfEnergy
 
 from homeassistant.config_entries import ConfigEntry
