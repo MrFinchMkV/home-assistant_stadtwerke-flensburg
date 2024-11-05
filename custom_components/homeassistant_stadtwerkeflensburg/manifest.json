@@ -1,0 +1,14 @@
+{
+  "domain": "stadtwerke_flensburg",
+  "name": "Stadtwerke Flensburg",
+  "codeowners": ["@MrFinchMkV"],
+  "config_flow": true,
+  "single_config_entry": true,
+  "dependencies": [],
+  "documentation": "https://github.com/MrFinchMkV/home-assistant_stadtwerke-flensburg",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/MrFinchMkV/home-assistant_stadtwerke-flensburg/issues",
+  "requirements": ["git+https://github.com/MrFinchMkV/stadtwerke-flensburg_ui_wrapper.git"],
+  "version": "0.0.1"
+}
